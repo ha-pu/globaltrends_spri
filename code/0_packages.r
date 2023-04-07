@@ -11,5 +11,5 @@ if (!require("tidyverse")) install.packages("tidyverse")
 if (!require("WDI")) install.packages("WDI")
 
 # save new year ----------------------------------------------------------------
-year <- 2011
+year <- 2010
 write_lines(year, "input/new_year.txt")
