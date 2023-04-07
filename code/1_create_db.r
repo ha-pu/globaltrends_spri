@@ -1,4 +1,8 @@
-### setup database - internal
+# Puhr, H. & Müllner, J.
+# Vox Populi, Vox Dei
+# A Concept and Measure for Grassroots Socio-Political Risk Using Google Trends
+
+# Create database
 
 # packages ---------------------------------------------------------------------
 library(globaltrends)
@@ -9,17 +13,17 @@ library(tidyverse)
 initialize_db()
 start_db()
 
-year <- 2022
+year <- read_lines("input/new_year.txt")
 
 time_frame <- paste0(year, "-01-01 ", year, "-12-31")
 
 # control keywords -------------------------------------------------------------
 controls <- read_xlsx("input/spri_topics.xlsx", sheet = 1) %>%
-  select(topic) %>%
+  select(-topic) %>%
   nest(control = code) %>%
   mutate(control = map(control, ~ .$code))
 
-batch_control <- add_control_keyword(keyword = controls$control, time = time_frame)
+add_control_keyword(keyword = controls$control, time = time_frame)
 
 # object keywords --------------------------------------------------------------
 keywords <- read_xlsx("input/spri_topics.xlsx", sheet = 2) %>%
@@ -43,8 +47,4 @@ add_locations(countries$iso2c, "geo_full")
 disconnect_db()
 
 # save data --------------------------------------------------------------------
-names(batch_control) <- years
-names(batch_object) <- years
-
-saveRDS(batch_control, "data/batch_control.rds")
 saveRDS(batch_object, "data/batch_object.rds")

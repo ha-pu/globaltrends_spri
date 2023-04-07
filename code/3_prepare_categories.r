@@ -34,4 +34,4 @@ spri_keyword_base <- score_base %>%
   )
 
 # save data --------------------------------------------------------------------
-saveRDS(spri_keyword_base, "data/spri_keyword_int.rds")
+saveRDS(spri_keyword_base, "data/spri_keyword_score.rds")

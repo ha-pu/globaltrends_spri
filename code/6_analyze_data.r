@@ -1,4 +1,8 @@
-### summarise internal risk data
+# Puhr, H. & Müllner, J.
+# Vox Populi, Vox Dei
+# A Concept and Measure for Grassroots Socio-Political Risk Using Google Trends
+
+# Analyze data
 
 # packages ---------------------------------------------------------------------
 library(maps)
@@ -28,6 +32,8 @@ data_wdi <- bind_rows(
 )
 
 lst_countries <- read_xlsx("input/lst_countries.xlsx")
+
+year <- read_lines("input/new_year.txt")
 
 # combine data -----------------------------------------------------------------
 data_wdi <- lst_countries %>%
@@ -95,14 +101,14 @@ mean_global <- data_global %>%
   pull(mean_global)
 
 ## map for 2010 ----------------------------------------------------------------
-world_2010 <- world_data %>%
+world_old <- world_data %>%
   filter((is.na(year) | year == 2010) & (is.na(category) | category == "Total")) %>%
   mutate(spri = na_if(spri, 0)) %>%
   mutate(spri = log(spri))
 
-ggplot(data = world_2010) +
+ggplot(data = world_old) +
   geom_map(
-    map = world_2010,
+    map = world_old,
     aes(
       x = long,
       y = lat,
@@ -125,17 +131,17 @@ ggplot(data = world_2010) +
   theme(legend.position = "bottom") +
   scale_fill_gradient2(midpoint = mean_global, low = "darkgreen", mid = "darkorange", high = "darkred")
 
-ggsave("images/spri_map_2010.png", height = 4, width = 5, dpi = 600)
+ggsave("images/spri_map_old.png", height = 4, width = 5, dpi = 600)
 
-## map for 2021 ----------------------------------------------------------------
-world_2021 <- world_data %>%
-  filter((is.na(year) | year == 2021) & (is.na(category) | category == "Total")) %>%
+## map for new_year ------------------------------------------------------------
+world_new <- world_data %>%
+  filter((is.na(year) | year == year) & (is.na(category) | category == "Total")) %>%
   mutate(spri = na_if(spri, 0)) %>%
   mutate(spri = log(spri))
 
-ggplot(data = world_2021) +
+ggplot(data = world_new) +
   geom_map(
-    map = world_2021,
+    map = world_new,
     aes(
       x = long,
       y = lat,
@@ -158,7 +164,7 @@ ggplot(data = world_2021) +
   theme(legend.position = "bottom") +
   scale_fill_gradient2(midpoint = mean_global, low = "darkgreen", mid = "darkorange", high = "darkred")
 
-ggsave("images/spri_map_2021.png", height = 4, width = 5, dpi = 600)
+ggsave("images/spri_map_new.png", height = 4, width = 5, dpi = 600)
 
 # average spri by country  -----------------------------------------------------
 data_spri <- data %>%

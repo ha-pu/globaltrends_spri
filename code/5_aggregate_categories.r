@@ -1,13 +1,16 @@
-### categorize internal data - mean
+# Puhr, H. & Müllner, J.
+# Vox Populi, Vox Dei
+# A Concept and Measure for Grassroots Socio-Political Risk Using Google Trends
+
+# Aggregate category data
 
 # packages ---------------------------------------------------------------------
 library(lubridate)
 library(tidyverse)
 
 # load data --------------------------------------------------------------------
-data_keyword <- read_rds("data/spri_keyword_int.rds")
-data_wdi <- read_rds("data/data_wdi.rds")
-batch_control <- read_rds("data/batch_control.rds")
+data_keyword <- read_rds("data/spri_keyword_score.rds")
+data_wdi <- read_rds("data/data_wdi_new.rds")
 
 # compute category -------------------------------------------------------------
 category_base <- data_keyword %>%
@@ -19,7 +22,7 @@ category_base <- data_keyword %>%
   ) %>%
   mutate(year = year(date))
 
-category_base_global <- category_base %>%
+category_global <- category_base %>%
   left_join(data_wdi, by = c("location" = "iso2c", "year")) %>%
   filter(spri != 0 & !is.na(gdp_share)) %>%
   group_by(date, category) %>%
@@ -29,7 +32,7 @@ category_base_global <- category_base %>%
   group_by(date, category, year) %>%
   summarise(spri = sum(spri), .groups = "drop")
 
-category_base_internet <- category_base %>%
+category_internet <- category_base %>%
   left_join(data_wdi, by = c("location" = "iso2c", "year")) %>%
   mutate(internet_share = internet_users * population_share) %>%
   filter(spri != 0 & !is.na(internet_share)) %>%

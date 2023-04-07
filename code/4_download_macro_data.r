@@ -1,10 +1,14 @@
-### import macro data
+# Puhr, H. & Müllner, J.
+# Vox Populi, Vox Dei
+# A Concept and Measure for Grassroots Socio-Political Risk Using Google Trends
+
+# Download macro data
 
 # packages ---------------------------------------------------------------------
 library(tidyverse)
 library(WDI)
 
-year <- 2022
+year <- read_lines("input/new_year.txt")
 
 # load wdi data ----------------------------------------------------------------
 data_wdi <- WDI(indicator = c("NY.GDP.MKTP.PP.CD", "SP.POP.TOTL", "IT.NET.USER.ZS"), start = year, end = year) %>%
