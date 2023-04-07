@@ -7,8 +7,7 @@ library(tidyverse)
 
 # load data --------------------------------------------------------------------
 start_db()
-batch_control <- read_rds("data/batch_control.rds")
-score_base <- export_score(control = batch_control)
+score_base <- export_score(control = 1)
 disconnect_db()
 
 data_keywords <- read_xlsx("input/spri_topics.xlsx", sheet = 2)

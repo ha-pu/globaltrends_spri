@@ -37,7 +37,7 @@ data_wdi <- data_wdi %>%
     internet_users
   )
 
-data_wdi <- expand_grid(year = year, iso2c = unique(data_wdi$iso2c)) %>%
+data_wdi <- expand_grid(year = as.numeric(year), iso2c = unique(data_wdi$iso2c)) %>%
   left_join(data_wdi, by = c("iso2c", "year")) %>%
   group_by(iso2c) %>%
   fill(internet_users, .direction = "updown") %>%
