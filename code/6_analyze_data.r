@@ -11,33 +11,19 @@ library(tidyverse)
 library(writexl)
 
 # load data --------------------------------------------------------------------
-category_mean <- bind_rows(
-  read_rds("data/category_mean_new.rds"),
-  read_rds("data/category_mean_old.rds")
-)
+category_mean <- read_rds("data/category_mean_old.rds")
+category_global <- read_rds("data/category_global_old.rds")
+category_internet <- read_rds("data/category_internet_old.rds")
 
-category_global <- bind_rows(
-  read_rds("data/category_global_new.rds"),
-  read_rds("data/category_global_old.rds")
-)
+data_wdi <- read_rds("data/data_wdi_old.rds")
 
-category_internet <- bind_rows(
-  read_rds("data/category_internet_new.rds"),
-  read_rds("data/category_internet_old.rds")
-)
+lst_countries <- read_xlsx("input/spri_countries.xlsx")
 
-data_wdi <- bind_rows(
-  read_rds("data/data_wdi_new.rds"),
-  read_rds("data/data_wdi_old.rds")
-)
-
-lst_countries <- read_xlsx("input/lst_countries.xlsx")
-
-year <- read_lines("input/new_year.txt")
+year <- 2021
 
 # combine data -----------------------------------------------------------------
 data_wdi <- lst_countries %>%
-  inner_join(data_wdi, by = c("location" = "iso2c")) %>%
+  inner_join(data_wdi, by = "iso2c", multiple = "all") %>%
   select(country = country.x, year, gdp_share)
 
 data <- category_mean %>%
@@ -47,22 +33,20 @@ data <- category_mean %>%
   bind_rows(category_mean) %>%
   mutate(spri = spri * 100)
 
-data <- data %>%
-  filter(control %in% control_base) %>%
-  inner_join(lst_countries, by = "location")
+data <- inner_join(data, lst_countries, by = c("location" = "iso2c"))
   
-data_global <- category_mean_global %>%
+data_global <- category_global %>%
   group_by(date, year) %>%
   summarise(spri = mean(spri), .groups = "drop") %>%
   mutate(category = "Total") %>%
-  bind_rows(category_mean_global) %>%
+  bind_rows(category_global) %>%
   mutate(spri = spri * 100)
 
-data_internet <- category_mean_internet %>%
+data_internet <- category_internet %>%
   group_by(date, year) %>%
   summarise(spri = mean(spri), .groups = "drop") %>%
   mutate(category = "Total") %>%
-  bind_rows(category_mean_internet) %>%
+  bind_rows(category_internet) %>%
   mutate(spri = spri * 100)
 
 data_global <- left_join(data_global, data_internet, by = c("date", "year", "category"))
@@ -93,7 +77,7 @@ world_data <- data %>%
 world_data <- map_data("world") %>%
   filter(region != "Antarctica") %>%
   fortify() %>%
-  left_join(world_data, by = c("region" = "country"))
+  left_join(world_data, by = c("region" = "country"), multiple = "all")
 
 mean_global <- data_global %>%
   filter(category == "Total") %>%
@@ -168,7 +152,6 @@ ggsave("images/spri_map_new.png", height = 4, width = 5, dpi = 600)
 
 # average spri by country  -----------------------------------------------------
 data_spri <- data %>%
-  filter(control %in% control_base) %>%
   group_by(category, year, country) %>%
   summarise(spri = mean(spri), .groups = "drop") %>%
   pivot_wider(names_from = category, values_from = spri) %>%
