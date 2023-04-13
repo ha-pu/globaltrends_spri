@@ -19,7 +19,7 @@ data_wdi <- read_rds("data/data_wdi_old.rds")
 
 lst_countries <- read_xlsx("input/spri_countries.xlsx")
 
-year <- 2021
+year <- read_lines("input/new_year.txt")
 
 # combine data -----------------------------------------------------------------
 data_wdi <- lst_countries %>%
@@ -141,7 +141,7 @@ ggplot(data = world_new) +
   scale_fill_gradient2(midpoint = mean_global, low = "darkgreen", mid = "darkorange", high = "darkred") +
   labs(
     fill = "Grassroots SPRI Total",
-    title = 2021,
+    title = year,
     x = NULL,
     y = NULL
   ) +
