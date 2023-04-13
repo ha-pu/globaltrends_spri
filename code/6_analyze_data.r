@@ -11,29 +11,15 @@ library(tidyverse)
 library(writexl)
 
 # load data --------------------------------------------------------------------
-category_mean <- bind_rows(
-  read_rds("data/category_mean_new.rds"),
-  read_rds("data/category_mean_old.rds")
-)
+category_mean <- read_rds("data/category_mean_old.rds")
+category_global <- read_rds("data/category_global_old.rds")
+category_internet <- read_rds("data/category_internet_old.rds")
 
-category_global <- bind_rows(
-  read_rds("data/category_global_new.rds"),
-  read_rds("data/category_global_old.rds")
-)
+data_wdi <- read_rds("data/data_wdi_old.rds")
 
-category_internet <- bind_rows(
-  read_rds("data/category_internet_new.rds"),
-  read_rds("data/category_internet_old.rds")
-)
+lst_countries <- read_xlsx("input/spri_countries.xlsx")
 
-data_wdi <- bind_rows(
-  read_rds("data/data_wdi_new.rds"),
-  read_rds("data/data_wdi_old.rds")
-)
-
-lst_countries <- read_xlsx("input/lst_countries.xlsx")
-
-year <- read_lines("input/new_year.txt")
+year <- 2021
 
 # combine data -----------------------------------------------------------------
 data_wdi <- lst_countries %>%
@@ -80,7 +66,7 @@ walk(seq_along(categories), ~{
       tag = LETTERS[[.x]]
     ) +
     theme_bw()
-  ggsave(str_c("images/spri_global_", categories[[.x]], ".png"), height = 2.5, width = 10, dpi = 600)
+  ggsave(str_c("images/spri_global_", categories[[.x]], ".png"), height = 5, width = 10)
 })
 
 # plot map ---------------------------------------------------------------------
@@ -114,11 +100,12 @@ ggplot(data = world_old) +
       map_id = region,
       fill = spri
     ),
-    colour = "#f2f2f2",
+    colour = "black",
     size = 0.5
   ) +
   scale_y_continuous(breaks = c()) +
   scale_x_continuous(breaks = c()) +
+  scale_fill_gradient2(midpoint = mean_global, low = "darkgreen", mid = "darkorange", high = "darkred") +
   labs(
     fill = "Grassroots SPRI Total",
     title = 2010,
@@ -126,10 +113,9 @@ ggplot(data = world_old) +
     y = NULL
   ) +
   theme_bw() +
-  theme(legend.position = "bottom") +
-  scale_fill_gradient2(midpoint = mean_global, low = "darkgreen", mid = "darkorange", high = "darkred")
+  theme(legend.position = "bottom")
 
-ggsave("images/spri_map_old.png", height = 4, width = 5, dpi = 600)
+ggsave("images/spri_map_old.png", height = 5, width = 10)
 
 ## map for new_year ------------------------------------------------------------
 world_new <- world_data %>%
@@ -147,11 +133,12 @@ ggplot(data = world_new) +
       map_id = region,
       fill = spri
     ),
-    colour = "#f2f2f2",
+    colour = "black",
     size = 0.5
   ) +
   scale_y_continuous(breaks = c()) +
   scale_x_continuous(breaks = c()) +
+  scale_fill_gradient2(midpoint = mean_global, low = "darkgreen", mid = "darkorange", high = "darkred") +
   labs(
     fill = "Grassroots SPRI Total",
     title = 2021,
@@ -159,10 +146,9 @@ ggplot(data = world_new) +
     y = NULL
   ) +
   theme_bw() +
-  theme(legend.position = "bottom") +
-  scale_fill_gradient2(midpoint = mean_global, low = "darkgreen", mid = "darkorange", high = "darkred")
+  theme(legend.position = "bottom")
 
-ggsave("images/spri_map_new.png", height = 4, width = 5, dpi = 600)
+ggsave("images/spri_map_new.png", height = 5, width = 10)
 
 # average spri by country  -----------------------------------------------------
 data_spri <- data %>%
