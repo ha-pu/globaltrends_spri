@@ -13,6 +13,7 @@ COPY code/4_download_macro_data.r /home/spri/code/4_download_macro_data.r
 COPY code/5_aggregate_categories.r /home/spri/code/5_aggregate_categories.r
 COPY input/spri_countries.xlsx /home/spri/input/spri_countries.xlsx
 COPY input/spri_topics.xlsx /home/spri/input/spri_topics.xlsx
+COPY data/spri_keyword.rds /home/spri/data/spri_keyword.rds
 
 RUN apt-get update && apt-get install -y --no-install-recommends nano
 
