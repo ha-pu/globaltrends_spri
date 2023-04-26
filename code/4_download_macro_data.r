@@ -11,7 +11,7 @@ library(WDI)
 year <- read_lines("input/new_year.txt")
 
 # load wdi data ----------------------------------------------------------------
-data_wdi <- WDI(indicator = c("NY.GDP.MKTP.PP.CD", "SP.POP.TOTL", "IT.NET.USER.ZS"), start = year, end = year) %>%
+data_wdi <- WDI(indicator = c("NY.GDP.MKTP.PP.CD", "SP.POP.TOTL", "IT.NET.USER.ZS"), start = 2010, end = year) %>%
   as_tibble() %>%
   rename(
     gdp_ppp = NY.GDP.MKTP.PP.CD,
@@ -44,4 +44,4 @@ data_wdi <- expand_grid(year = as.numeric(year), iso2c = unique(data_wdi$iso2c))
   ungroup()
 
 # save data --------------------------------------------------------------------
-saveRDS(data_wdi, "data/data_wdi_new.rds")
+saveRDS(data_wdi, "data/data_wdi.rds")

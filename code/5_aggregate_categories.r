@@ -10,7 +10,7 @@ library(tidyverse)
 
 # load data --------------------------------------------------------------------
 data_keyword <- read_rds("data/spri_keyword.rds")
-data_wdi <- read_rds("data/data_wdi_old.rds")
+data_wdi <- read_rds("data/data_wdi.rds")
 
 # compute category -------------------------------------------------------------
 category_base <- data_keyword %>%
@@ -44,6 +44,6 @@ category_internet <- category_base %>%
   summarise(spri = sum(spri), .groups = "drop")
 
 # save data --------------------------------------------------------------------
-saveRDS(category_base, "data/category_base_old.rds")
-saveRDS(category_global, "data/category_global_old.rds")
-saveRDS(category_internet, "data/category_internet_old.rds")
+saveRDS(category_base, "data/category_base.rds")
+saveRDS(category_global, "data/category_global.rds")
+saveRDS(category_internet, "data/category_internet.rds")

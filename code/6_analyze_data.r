@@ -11,11 +11,11 @@ library(tidyverse)
 library(writexl)
 
 # load data --------------------------------------------------------------------
-category_mean <- read_rds("data/category_mean_old.rds")
-category_global <- read_rds("data/category_global_old.rds")
-category_internet <- read_rds("data/category_internet_old.rds")
+category_mean <- read_rds("data/category_mean.rds")
+category_global <- read_rds("data/category_global.rds")
+category_internet <- read_rds("data/category_internet.rds")
 
-data_wdi <- read_rds("data/data_wdi_old.rds")
+data_wdi <- read_rds("data/data_wdi.rds")
 
 lst_countries <- read_xlsx("input/spri_countries.xlsx")
 
