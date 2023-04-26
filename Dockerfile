@@ -1,5 +1,7 @@
 FROM rocker/r-ver
 
+RUN R -e "install.packages(c('WDI', 'tidyverse', 'readxl', 'globaltrends'))"
+
 RUN mkdir /home/spri
 RUN mkdir /home/spri/code
 RUN mkdir /home/spri/input
