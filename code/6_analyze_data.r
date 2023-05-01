@@ -11,7 +11,7 @@ library(tidyverse)
 library(writexl)
 
 # load data --------------------------------------------------------------------
-category_mean <- read_rds("data/category_mean.rds")
+category_mean <- read_rds("data/category_base.rds")
 category_global <- read_rds("data/category_global.rds")
 category_internet <- read_rds("data/category_internet.rds")
 
@@ -27,7 +27,7 @@ data_wdi <- lst_countries %>%
   select(country = country.x, year, gdp_share)
 
 data <- category_mean %>%
-  group_by(control, location, date, year) %>%
+  group_by(location, date, year) %>%
   summarise(spri = mean(spri), .groups = "drop") %>%
   mutate(category = "Total") %>%
   bind_rows(category_mean) %>%

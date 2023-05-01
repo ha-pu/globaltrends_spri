@@ -15,7 +15,7 @@ data_wdi <- read_rds("data/data_wdi.rds")
 # compute category -------------------------------------------------------------
 category_base <- data_keyword %>%
   filter(spri > 0) %>%
-  group_by(control, location, date, category) %>%
+  group_by(location, date, category) %>%
   summarise(
     spri = mean(spri),
     .groups = "drop"
