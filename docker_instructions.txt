@@ -1,0 +1,40 @@
+Install tmux ---------------------------------------------------------------------------------------
+sudo apt-get update -y
+sudo apt-get install zip unzip
+sudo apt-get install tmux
+
+Install docker -------------------------------------------------------------------------------------
+sudo apt-get update -y
+sudo apt-get install curl
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh ./get-docker.sh
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+docker run hello-world
+rm get-docker.sh
+
+Create docker image --------------------------------------------------------------------------------
+docker build -t <image name:image tag> .
+docker build -t spri:v01 .
+
+Run image with bash --------------------------------------------------------------------------------
+docker run -it <image name> /bin/bash
+docker run -it spri:v01 /bin/bash
+
+Start container ------------------------------------------------------------------------------------
+docker start <container id>
+
+Connect to container -------------------------------------------------------------------------------
+docker attach <container id>
+
+Export folder from docker container ----------------------------------------------------------------
+docker cp <container id>:/source/file/path/in/container /destination/on/host
+docker cp <container id>:/home/spri/data .
+zip -r spri_data.zip data
+
+Remove all containers ------------------------------------------------------------------------------
+docker rm $(docker ps -aq)
+
+Remove all images ----------------------------------------------------------------------------------
+docker rmi $(docker images -q)
