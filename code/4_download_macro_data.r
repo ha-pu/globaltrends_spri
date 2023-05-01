@@ -8,7 +8,7 @@
 library(tidyverse)
 library(WDI)
 
-year <- read_lines("input/new_year.txt")
+year <- as.numeric(read_lines("input/new_year.txt"))
 
 # load wdi data ----------------------------------------------------------------
 data_wdi <- WDI(indicator = c("NY.GDP.MKTP.PP.CD", "SP.POP.TOTL", "IT.NET.USER.ZS"), start = 2010, end = year) %>%
@@ -37,9 +37,12 @@ data_wdi <- data_wdi %>%
     internet_users
   )
 
-data_wdi <- expand_grid(year = as.numeric(year), iso2c = unique(data_wdi$iso2c)) %>%
+data_wdi <- expand_grid(year = 2010:year, iso2c = unique(data_wdi$iso2c)) %>%
   left_join(data_wdi, by = c("iso2c", "year")) %>%
   group_by(iso2c) %>%
+  arrange(iso2c, year) %>%
+  fill(gdp_share, .direction = "updown") %>%
+  fill(population_share, .direction = "updown") %>%
   fill(internet_users, .direction = "updown") %>%
   ungroup()
 
