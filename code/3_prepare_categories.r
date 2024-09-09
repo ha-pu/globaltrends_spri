@@ -1,3 +1,8 @@
+# Puhr, H. & Müllner, J.
+# Vox Populi, Vox Dei
+# A Concept and Measure for Grassroots Socio-Political Risk Using Google Trends
+# Journal of International Management, 30(2): 101096
+
 ### prepare internal category data
 
 # packages ---------------------------------------------------------------------
@@ -22,13 +27,13 @@ spri_keyword <- score_base %>%
     group,
     keyword,
     date,
-    score_obs
+    score
   ) %>%
   unique() %>%
-  filter(score_obs != Inf & group != "Drop") %>%
+  filter(score != Inf & group != "Drop") %>%
   group_by(control, location, category, group, keyword, date) %>%
   summarise(
-    spri = sum(score_obs),
+    spri = sum(score),
     .groups = "drop"
   )
 
