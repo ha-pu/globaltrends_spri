@@ -8,7 +8,7 @@ Puhr, H., & Müllner, J. (2023). Vox Populi, Vox Dei: A Concept and Measure for 
 
 The **globaltrends SPRI** is part of the [globaltrends project](https://github.com/ha-pu/globaltrends).
 
-* Last update of the data: 2024-09-09.
+* Last update of the data: 2024-09-09
 * Coverage of the data: 2010-2023
 
 ## Development of Global SPRI
