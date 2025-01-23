@@ -12,5 +12,5 @@
 # install.packages("WDI")
 
 # save new year ----------------------------------------------------------------
-year <- 2023
+year <- 2025
 readr::write_lines(year, "input/new_year.txt")
