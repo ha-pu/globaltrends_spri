@@ -84,7 +84,7 @@ world_data <- data %>%
 world_data <- map_data("world") %>%
   filter(region != "Antarctica") %>%
   fortify() %>%
-  left_join(world_data, by = c("region" = "country"), multiple = "all")
+  left_join(world_data, by = c("region" = "country"), relationship = "many-to-many")
 
 mean_global <- data_global %>%
   filter(category == "Total") %>%
@@ -108,7 +108,7 @@ ggplot(data = world_old) +
       fill = spri
     ),
     colour = "black",
-    size = 0.5
+    linewidth = 0.5
   ) +
   scale_y_continuous(breaks = c()) +
   scale_x_continuous(breaks = c()) +
@@ -141,7 +141,7 @@ ggplot(data = world_new) +
       fill = spri
     ),
     colour = "black",
-    size = 0.5
+    linewidth = 0.5
   ) +
   scale_y_continuous(breaks = c()) +
   scale_x_continuous(breaks = c()) +
