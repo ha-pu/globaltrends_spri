@@ -6,6 +6,7 @@
 # Analyze data
 
 # packages ---------------------------------------------------------------------
+library(lubridate)
 library(maps)
 library(readxl)
 library(tidyverse)
@@ -54,6 +55,10 @@ data_global <- left_join(data_global, data_internet, by = c("date", "year", "cat
 
 # plot global spri -------------------------------------------------------------
 categories <- c("Total", "Economy", "Government", "Security", "Society")
+year_min <- year(min(data_global$date))
+year_max <- year(max(data_global$date))
+year_seq <- seq(year_min, year_max)
+date_seq <- dmy(paste(31, 12, year_seq, sep = "-"))
 
 walk(seq_along(categories), ~{
   data_global %>%
@@ -61,6 +66,7 @@ walk(seq_along(categories), ~{
     ggplot() +
     geom_line(aes(x = date, y = spri.x), colour = "darkred") +
     geom_line(aes(x = date, y = spri.y), colour = "darkblue") +
+    scale_x_date(minor_breaks = date_seq) +
     labs(
       x = NULL,
       y = str_c("Grassroots SPRI", categories[[.x]], sep = " "),
