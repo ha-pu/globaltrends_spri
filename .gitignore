@@ -6,7 +6,7 @@
 .Rproj
 
 # Intermediate data files
-data/*
+data
 
 # Database file
 db
