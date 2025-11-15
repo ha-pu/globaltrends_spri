@@ -6,7 +6,7 @@
 # Install packages
 
 # packages ---------------------------------------------------------------------
-# install.packages("globaltrends")
+# devtodevtools::install_github(repo = "ha-pu/globaltrends", ref = "Google-Trends-API")
 # install.packages("readxl")
 # install.packages("tidyverse")
 # install.packages("WDI")
@@ -14,3 +14,8 @@
 # save new year ----------------------------------------------------------------
 year <- 2024
 readr::write_lines(year, "input/new_year.txt")
+
+# create directory for intermediate data ---------------------------------------
+if (!dir.exists("data")) {
+    dir.create("data")
+}
