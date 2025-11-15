@@ -10,11 +10,13 @@ library(globaltrends)
 library(tidyverse)
 
 # parameters -------------------------------------------------------------------
+readRenviron(".env")
+
 initialize_python(
-  api_key = gtrends_api, # Google Trends API key
-  conda_env = gtrends_conda # Location of Conda environment
+  api_key = Sys.getenv("GOOGLE_API_KEY"), # Google Trends API key
+  python_env = Sys.getenv("PYTHON_ENV") # Location of Python environment
 )
-gt.env$query_wait <- 1 # Set wait time between queries to 1 second
+
 start_db()
 batch_object <- read_rds("data/batch_object.rds")
 

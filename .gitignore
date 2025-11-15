@@ -11,5 +11,6 @@ data/*
 # Database file
 db
 
-# .env file
+# .env files
 .env
+venv/
