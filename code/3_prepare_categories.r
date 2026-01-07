@@ -31,10 +31,9 @@ spri_keyword <- score_base %>%
   ) %>%
   unique() %>%
   filter(score != Inf & group != "Drop") %>%
-  group_by(control, location, category, group, keyword, date) %>%
   summarise(
     spri = sum(score),
-    .groups = "drop"
+    .by = c(control, location, category, group, keyword, date)
   )
 
 # save data --------------------------------------------------------------------

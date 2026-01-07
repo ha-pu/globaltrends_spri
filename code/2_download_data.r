@@ -14,7 +14,7 @@ readRenviron(".env")
 
 initialize_python(
   api_key = Sys.getenv("GOOGLE_API_KEY"), # Google Trends API key
-  python_env = Sys.getenv("PYTHON_ENV") # Location of Python environment
+  conda_env = Sys.getenv("CONDA_ENV") # Location of Conda environment
 )
 
 start_db()

@@ -13,4 +13,4 @@ db
 
 # .env files
 .env
-venv/
+venv
