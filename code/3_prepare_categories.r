@@ -34,7 +34,19 @@ spri_keyword <- score_base %>%
   summarise(
     spri = sum(score),
     .by = c(control, location, category, group, keyword, date)
-  )
+  ) %>%
+  mutate(
+    month = month(date),
+    year = year(date)
+  ) %>%
+  summarise(
+    spri = mean(spri),
+    .by = c(control, location, category, group, keyword, month, year)
+  ) %>%
+  mutate(
+    date = dmy(paste(1, month, year, sep = "-"))
+  ) %>%
+  select(-month, -year)
 
 # save data --------------------------------------------------------------------
 data_keyword <- bind_rows(
