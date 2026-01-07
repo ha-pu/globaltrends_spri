@@ -25,7 +25,7 @@ differnet file formats:
 + [PARQUET](https://github.com/ha-pu/globaltrends_spri/blob/main/data_spri.parquet)
 + [RDS](https://github.com/ha-pu/globaltrends_spri/blob/main/data_spri.rds)
 + [XLSX](https://github.com/ha-pu/globaltrends_spri/blob/main/data_spri.xlsx)
-ex
+
 Cite any usage of the **globaltrends SPRI** as:  
 Puhr, H., & Müllner, J. (2023). Vox Populi, Vox Dei: A Concept and Measure for
 Grassroots Socio-Political Risk Using Google Trends.
