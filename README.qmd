@@ -1,0 +1,311 @@
+---
+title: "globaltrends SPRI"
+subtitle: " A Google Trends-Based Socio-Political Risk Measure"
+format: gfm
+---
+
+We propose a concept of grassroots socio-political risk (SPR) and provide the
+**globaltrends SPRI** as a measure. The **globaltrends SPRI** is based on
+individual-level issue salience using data from
+[Google Trends](https://trends.google.com/trends/). Our concept provides a
+bottom-up complement to established measures that focus more on political
+institutional players and the institutional constraints they face. The
+**globaltrends SPRI** can serve to predict institutional change in a country
+initiated by a popular majority of individuals. In contrast to existing
+measures, the **globaltrends SPRI** measure captures issue salience directly
+among individuals rather than media or analyst reports. As such, it is uniquely
+representative of socio-political sentiment, timely, and widely available. Our
+concept and measure offer novel opportunities for international business
+researchers. Refer to the accompanying paper (available from the authors) for
+further information on the index construction.
+
+The current version of the **globaltrends SPRI** dataset can be accessed in
+differnet file formats:
+
++ [PARQUET](https://github.com/ha-pu/globaltrends_spri/blob/main/data_spri.parquet)
++ [RDS](https://github.com/ha-pu/globaltrends_spri/blob/main/data_spri.rds)
++ [XLSX](https://github.com/ha-pu/globaltrends_spri/blob/main/data_spri.xlsx)
+ex
+Cite any usage of the **globaltrends SPRI** as:  
+Puhr, H., & Müllner, J. (2023). Vox Populi, Vox Dei: A Concept and Measure for
+Grassroots Socio-Political Risk Using Google Trends.
+*Journal of International Management*, 30(2): 101096.
+[https://doi.org/10.1016/j.intman.2023.101096](https://doi.org/10.1016/j.intman.2023.101096)
+
+The **globaltrends SPRI** is part of the
+[globaltrends project](https://github.com/ha-pu/globaltrends).
+
+* Last update of the data: 2026-01-07
+* Coverage of the data: 2010-2025
+
+## Development of Global SPRI
+
+```{r, packages}
+#| echo: false
+#| mesage: false
+#| warning: false
+
+library(glue)
+library(lubridate)
+library(maps)
+library(readxl)
+library(tidyverse)
+library(writexl)
+```
+
+```{r, load_data}
+#| echo: false
+#| mesage: false
+#| warning: false
+
+category_mean <- read_rds("data/category_base.rds")
+category_global <- read_rds("data/category_global.rds")
+category_internet <- read_rds("data/category_internet.rds")
+
+data_wdi <- read_rds("data/data_wdi.rds")
+
+lst_countries <- read_xlsx("input/spri_countries.xlsx")
+
+year <- read_lines("input/new_year.txt")
+```
+
+```{r, combine_data}
+#| echo: false
+#| mesage: false
+#| warning: false
+
+data_wdi <- lst_countries %>%
+  inner_join(data_wdi, by = "iso2c", multiple = "all") %>%
+  select(country = country.x, year, gdp_share)
+
+data <- category_mean %>%
+  group_by(location, date, year) %>%
+  summarise(spri = mean(spri), .groups = "drop") %>%
+  mutate(category = "Total") %>%
+  bind_rows(category_mean) %>%
+  mutate(spri = spri * 100)
+
+data <- inner_join(data, lst_countries, by = c("location" = "iso2c"))
+  
+data_global <- category_global %>%
+  group_by(date, year) %>%
+  summarise(spri = mean(spri), .groups = "drop") %>%
+  mutate(category = "Total") %>%
+  bind_rows(category_global) %>%
+  mutate(spri = spri * 100)
+
+data_internet <- category_internet %>%
+  group_by(date, year) %>%
+  summarise(spri = mean(spri), .groups = "drop") %>%
+  mutate(category = "Total") %>%
+  bind_rows(category_internet) %>%
+  mutate(spri = spri * 100)
+
+data_global <- left_join(data_global, data_internet, by = c("date", "year", "category"))
+```
+
+```{r, plot_global_spri0}
+#| echo: false
+#| mesage: false
+#| warning: false
+
+categories <- c("Total", "Economy", "Government", "Security", "Society")
+year_min <- year(min(data_global$date))
+year_max <- year(max(data_global$date))
+year_seq <- seq(year_min, year_max)
+date_seq <- dmy(paste(31, 12, year_seq, sep = "-"))
+```
+
+```{r, plot_global_spri1}
+#| echo: false
+#| mesage: false
+#| warning: false
+
+.x <- 1
+data_global %>%
+    filter(category == categories[[.x]]) %>%
+    ggplot() +
+    geom_line(aes(x = date, y = spri.x), colour = "darkred") +
+    geom_line(aes(x = date, y = spri.y), colour = "darkblue") +
+    scale_x_date(minor_breaks = date_seq) +
+    labs(
+      x = NULL,
+      y = glue("Grassroots SPRI - {categories[[.x]]}"),
+      title = glue("Grassroots SPRI - {categories[[.x]]}")
+    ) +
+    theme_bw()
+```
+
+```{r, plot_global_spri2}
+#| echo: false
+#| mesage: false
+#| warning: false
+
+.x <- 2
+data_global %>%
+    filter(category == categories[[.x]]) %>%
+    ggplot() +
+    geom_line(aes(x = date, y = spri.x), colour = "darkred") +
+    geom_line(aes(x = date, y = spri.y), colour = "darkblue") +
+    scale_x_date(minor_breaks = date_seq) +
+    labs(
+      x = NULL,
+      y = glue("Grassroots SPRI - {categories[[.x]]}"),
+      title = glue("Grassroots SPRI - {categories[[.x]]}")
+    ) +
+    theme_bw()
+```
+
+```{r, plot_global_spri3}
+#| echo: false
+#| mesage: false
+#| warning: false
+
+.x <- 3
+data_global %>%
+    filter(category == categories[[.x]]) %>%
+    ggplot() +
+    geom_line(aes(x = date, y = spri.x), colour = "darkred") +
+    geom_line(aes(x = date, y = spri.y), colour = "darkblue") +
+    scale_x_date(minor_breaks = date_seq) +
+    labs(
+      x = NULL,
+      y = glue("Grassroots SPRI - {categories[[.x]]}"),
+      title = glue("Grassroots SPRI - {categories[[.x]]}")
+    ) +
+    theme_bw()
+```
+
+```{r, plot_global_spri4}
+#| echo: false
+#| mesage: false
+#| warning: false
+
+.x <- 4
+data_global %>%
+    filter(category == categories[[.x]]) %>%
+    ggplot() +
+    geom_line(aes(x = date, y = spri.x), colour = "darkred") +
+    geom_line(aes(x = date, y = spri.y), colour = "darkblue") +
+    scale_x_date(minor_breaks = date_seq) +
+    labs(
+      x = NULL,
+      y = glue("Grassroots SPRI - {categories[[.x]]}"),
+      title = glue("Grassroots SPRI - {categories[[.x]]}")
+    ) +
+    theme_bw()
+```
+
+```{r, plot_global_spri5}
+#| echo: false
+#| mesage: false
+#| warning: false
+
+.x <- 5
+data_global %>%
+    filter(category == categories[[.x]]) %>%
+    ggplot() +
+    geom_line(aes(x = date, y = spri.x), colour = "darkred") +
+    geom_line(aes(x = date, y = spri.y), colour = "darkblue") +
+    scale_x_date(minor_breaks = date_seq) +
+    labs(
+      x = NULL,
+      y = glue("Grassroots SPRI - {categories[[.x]]}"),
+      title = glue("Grassroots SPRI - {categories[[.x]]}")
+    ) +
+    theme_bw()
+```
+
+## Global SPRI 2010 vs. 2025
+
+```{r, plot_map}
+#| echo: false
+#| mesage: false
+#| warning: false
+
+world_data <- data %>%
+  group_by(year, country, category) %>%
+  summarise(spri = mean(spri), .groups = "drop")
+
+world_data <- map_data("world") %>%
+  filter(region != "Antarctica") %>%
+  fortify() %>%
+  left_join(world_data, by = c("region" = "country"), relationship = "many-to-many")
+
+mean_global <- data_global %>%
+  filter(category == "Total") %>%
+  summarise(mean_global = log(mean(spri.x))) %>%
+  pull(mean_global)
+```
+
+```{r, plot_map_old}
+#| echo: false
+#| mesage: false
+#| warning: false
+
+world_old <- world_data %>%
+  filter((is.na(year) | year == 2010) & (is.na(category) | category == "Total")) %>%
+  mutate(spri = na_if(spri, 0)) %>%
+  mutate(spri = log(spri))
+
+ggplot(data = world_old) +
+  geom_map(
+    map = world_old,
+    aes(
+      x = long,
+      y = lat,
+      group = group,
+      map_id = region,
+      fill = spri
+    ),
+    colour = "black",
+    linewidth = 0.5
+  ) +
+  scale_y_continuous(breaks = c()) +
+  scale_x_continuous(breaks = c()) +
+  scale_fill_gradient2(midpoint = mean_global, low = "darkgreen", mid = "darkorange", high = "darkred") +
+  labs(
+    fill = "Grassroots SPRI Total",
+    title = "Grassroots SPRI Total: 2010",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+```{r, plot_map_new}
+#| echo: false
+#| mesage: false
+#| warning: false
+
+world_new <- world_data %>%
+  filter((is.na(year) | year == year) & (is.na(category) | category == "Total")) %>%
+  mutate(spri = na_if(spri, 0)) %>%
+  mutate(spri = log(spri))
+
+ggplot(data = world_new) +
+  geom_map(
+    map = world_new,
+    aes(
+      x = long,
+      y = lat,
+      group = group,
+      map_id = region,
+      fill = spri
+    ),
+    colour = "black",
+    linewidth = 0.5
+  ) +
+  scale_y_continuous(breaks = c()) +
+  scale_x_continuous(breaks = c()) +
+  scale_fill_gradient2(midpoint = mean_global, low = "darkgreen", mid = "darkorange", high = "darkred") +
+  labs(
+    fill = "Grassroots SPRI Total",
+    title = glue("Grassroots SPRI Total: {year}"),
+    x = NULL,
+    y = NULL
+  ) +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
