@@ -18,7 +18,7 @@ researchers. Refer to the accompanying paper (available from the
 authors) for further information on the index construction.
 
 The current version of the **globaltrends SPRI** dataset can be accessed
-in differnet file formats:
+in different file formats:
 
 - [PARQUET](https://github.com/ha-pu/globaltrends_spri/blob/main/data_spri.parquet)
 - [RDS](https://github.com/ha-pu/globaltrends_spri/blob/main/data_spri.rds)
